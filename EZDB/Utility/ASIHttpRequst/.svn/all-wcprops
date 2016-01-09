@@ -1,0 +1,125 @@
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/ASIHttpRequst
+END
+ASIHTTPRequest.m
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/ASIHttpRequst/ASIHTTPRequest.m
+END
+ASICacheDelegate.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/ASIHttpRequst/ASICacheDelegate.h
+END
+ASINetworkQueue.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/ASIHttpRequst/ASINetworkQueue.h
+END
+ASIDataDecompressor.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/ASIHttpRequst/ASIDataDecompressor.h
+END
+ASIAuthenticationDialog.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/ASIHttpRequst/ASIAuthenticationDialog.h
+END
+ASIProgressDelegate.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/ASIHttpRequst/ASIProgressDelegate.h
+END
+ASIDownloadCache.m
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/ASIHttpRequst/ASIDownloadCache.m
+END
+ASINetworkQueue.m
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/ASIHttpRequst/ASINetworkQueue.m
+END
+ASIDataDecompressor.m
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/ASIHttpRequst/ASIDataDecompressor.m
+END
+ASIAuthenticationDialog.m
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/ASIHttpRequst/ASIAuthenticationDialog.m
+END
+ASIFormDataRequest.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/ASIHttpRequst/ASIFormDataRequest.h
+END
+ASIFormDataRequest.m
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/ASIHttpRequst/ASIFormDataRequest.m
+END
+ASIInputStream.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/ASIHttpRequst/ASIInputStream.h
+END
+ASIHTTPRequestConfig.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/ASIHttpRequst/ASIHTTPRequestConfig.h
+END
+ASIInputStream.m
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/ASIHttpRequst/ASIInputStream.m
+END
+ASIHTTPRequestDelegate.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/ASIHttpRequst/ASIHTTPRequestDelegate.h
+END
+ASIDataCompressor.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/ASIHttpRequst/ASIDataCompressor.h
+END
+ASIHTTPRequest.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/ASIHttpRequst/ASIHTTPRequest.h
+END
+ASIDownloadCache.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/ASIHttpRequst/ASIDownloadCache.h
+END
+ASIDataCompressor.m
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/ASIHttpRequst/ASIDataCompressor.m
+END

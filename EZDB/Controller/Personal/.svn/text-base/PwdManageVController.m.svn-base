@@ -1,0 +1,142 @@
+//
+//  PwdManageVController.m
+//  EZDB
+//
+//  Created by Haitao.Li on 14/11/11.
+//  Copyright (c) 2014年 Pactera. All rights reserved.
+//
+
+#import "PwdManageVController.h"
+#import "LoginViewController.h"
+#import "SetPayPwdViewController.h"
+#import "UpdPwdViewController.h"
+#import "ChangePwdViewController.h"
+#import "QueryVCPPwdRequest.h"
+
+#define kPwdManNavTitle @"密码管理"
+//BOCOPPAY_URL_LOGOUT
+@interface PwdManageVController ()
+
+@end
+
+@implementation PwdManageVController
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Custom initialization
+    }
+    return self;
+}
+
+#pragma mark - PopViewContrlDelegate
+- (void)popViewContrl:(NSInteger )index
+{
+    switch (index) {
+        case 1:{
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+            break;
+            
+        default:
+            break;
+    }
+}
+#pragma mark -
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    [self setupSubViews];
+    [self queryVCPPwd];
+    // Do any additional setup after loading the view from its nib.
+}
+
+- (void)setupSubViews
+{
+    [self setNavBarWithtitle:kPwdManNavTitle superView:self.view backImg:kNavBackImgName homeImg:nil];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [_coverView setFrame:CGRectMake(0, kNavbarHeight, kScreenWidth, kScreenHeight)];
+    [_coverView setBackgroundColor:kViewBackGroudColor];
+
+}
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [[EZDBAppDelegate appDelegate].tabBarCtl hideMyTabBar];
+}
+
+#pragma mark - 查询客户是否已有VCP支付密码
+- (void)queryVCPPwd
+{
+    BOCOPPayAuthorizeInfo *authorizeInfo = [BOCOPLogin sharedInstance].authInfo;
+    QueryVCPPwdRequest *request = [QueryVCPPwdRequest requestWithHeaders:nil];
+    NSMutableDictionary *headers = [NSMutableDictionary dictionaryWithDictionary:[request getBusinessRequestHeaderDictionary:authorizeInfo]];
+    //报文头
+    request.headers = headers;
+    //参数
+    NSDictionary *bodyParameters = @{@"custNo":[UserInfoSample shareInstance].userItems[@"uid"]};
+    request.postJSON = [bodyParameters JSONString];
+    
+    [request onRequestDidFinishLoadingWithResult:^(NSDictionary *result) {
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        NSLog(@"AAAAAA ——————%@",result);
+        if ([result[@"responseCode"]isEqualToString:_responseCode_No_PayPwd]) {
+            [UserInfoSample shareInstance].isSetPayPwd = NO;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [_payPwdBtn setTitle:kSetPayPwdTitle forState:UIControlStateNormal];
+                [_coverView removeFromSuperview];
+                _coverView = nil;
+            });
+        }else if ([result[@"responseCode"]isEqualToString:_responseCode_Yes_PayPwd]){
+            [UserInfoSample shareInstance].isSetPayPwd = YES;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [_payPwdBtn setTitle:kUpdPayPwdTitle forState:UIControlStateNormal];
+                [_coverView removeFromSuperview];
+                _coverView = nil;
+            });
+        }
+    }];
+    [request onRequestFailWithError:^(NSError *error) {
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        __Login_Invailid_;
+    }];
+    [request connect];
+}
+
+
+//修改登录密码
+- (IBAction)loginPwdUpd:(UIButton *)sender
+{
+    GOTO_NEXTVIEWCONTROLLER(ChangePwdViewController,@"ChangePwdViewController35", @"ChangePwdViewController");
+}
+
+//设置或修改支付密码
+- (IBAction)payPwdSetAndUpd:(UIButton *)sender
+{
+    if (![UserInfoSample shareInstance].isSetPayPwd){
+        GOTO_NEXTVIEWCONTROLLER(SetPayPwdViewController,@"SetPayPwdViewController", @"SetPayPwdViewController4");
+    }else if ([UserInfoSample shareInstance].isSetPayPwd){
+        GOTO_NEXTVIEWCONTROLLER(UpdPwdViewController,@"UpdPwdViewController", @"UpdPwdViewController4");
+//        GOTO_NEXTVIEWCONTROLLER(SetPayPwdViewController,@"SetPayPwdViewController", @"SetPayPwdViewController4");
+
+    }
+}
+#pragma mark - NBAlertViewDelegate
+- (void)NBAlertViewDialogButtonTouchUpInside:(id)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    [alertView close];
+    if ([alertView tag]==111) {
+        GOTO_NEXTVIEWCONTROLLER(LoginViewController,
+                                @"LoginViewController",
+                                @"LoginViewController4");
+    }
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+@end

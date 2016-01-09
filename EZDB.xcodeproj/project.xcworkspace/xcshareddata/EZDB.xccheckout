@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>EE351D6D-B731-402C-94D3-7D3E7ABE569B</string>
+	<key>IDESourceControlProjectName</key>
+	<string>EZDB</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>d0097fd2-b2a1-456e-9407-7d7003ba5cb5++3050</key>
+		<string>http://22.188.12.107:18080/svn/DBS/ios/ezdb_latest</string>
+		<key>d0097fd2-b2a1-456e-9407-7d7003ba5cb5++5326</key>
+		<string>http://22.188.12.107:18080/svn/DBS/ios</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>new_ezdb/EZDB.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>d0097fd2-b2a1-456e-9407-7d7003ba5cb5++3050</key>
+		<string>../../../../ezdb_latest</string>
+		<key>d0097fd2-b2a1-456e-9407-7d7003ba5cb5++5326</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectRepositoryRootDictionary</key>
+	<dict>
+		<key>d0097fd2-b2a1-456e-9407-7d7003ba5cb5++3050</key>
+		<string>http://22.188.12.107:18080/svn/DBS</string>
+		<key>d0097fd2-b2a1-456e-9407-7d7003ba5cb5++5326</key>
+		<string>http://22.188.12.107:18080/svn/DBS</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>http://22.188.12.107:18080/svn/DBS/ios/new_ezdb/EZDB.xcodeproj</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>d0097fd2-b2a1-456e-9407-7d7003ba5cb5++5326</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.subversion</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>d0097fd2-b2a1-456e-9407-7d7003ba5cb5++3050</string>
+			<key>IDESourceControlWCCName</key>
+			<string>ezdb_latest</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.subversion</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>d0097fd2-b2a1-456e-9407-7d7003ba5cb5++5326</string>
+			<key>IDESourceControlWCCName</key>
+			<string>SVN</string>
+		</dict>
+	</array>
+</dict>
+</plist>

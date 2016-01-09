@@ -1,0 +1,396 @@
+//
+//  PayViewController.m
+//  EZDB
+//
+//  Created by luoyao on 14/11/14.
+//  Copyright (c) 2014年 Pactera. All rights reserved.
+//
+
+#import "PayViewController.h"
+#import "BindGetCodeRequest.h"
+#import "VerifyMsgCodeRequest.h"
+#import "LoginViewController.h"
+#import "BindGetCodeRequest.h"
+#import "VerifyVCPPwdRequest.h"
+#import "GetServerRandomRequest.h"
+#import "SubscribeDataRequest.h"
+#import "SubscribeResultRequest.h"
+#import "SubscribModel.h"
+#include "Base64Transcoder.h"
+
+@interface PayViewController ()
+{
+    NSTimer                 *counter;
+    NSString                *phoneNo;
+    NSString                *odrNo;
+}
+
+@end
+
+
+static int __time = 59;
+
+@implementation PayViewController
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Custom initialization
+    }
+    return self;
+}
+- (void)dealloc
+{
+    __time = 59;
+    counter = nil;
+}
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    [self setUpSubViews];
+    
+}
+
+- (void)setUpSubViews
+{
+    //nav
+    [self setNavBarWithtitle:kPurchaseTitle superView:self.view backImg:kNavBackImgName homeImg:nil];
+    //textField
+    self.SMSCodeTextField.keyboardType = UIKeyboardTypeNumberPad;
+    self.SMSCodeTextField.delegate = self;
+    
+    self.passWordTextField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+    self.passWordTextField.secureTextEntry = YES;
+    self.passWordTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    self.passWordTextField.returnKeyType = UIReturnKeyDone;
+    self.passWordTextField.backgroundColor = [UIColor clearColor];
+    self.passWordTextField.clearsOnBeginEditing = YES;
+    self.passWordTextField.font = [UIFont systemFontOfSize:14];
+    self.passWordTextField.borderStyle = UITextBorderStyleNone;
+    self.passWordTextField.randomeKey_S = @"MDAwMDAwMDAwMDAwMDk4Nw==";
+    self.passWordTextField.passwordMaxLength=20;
+    self.passWordTextField.passwordMinLength=6;
+    self.passWordTextField.outputValueType=2;
+    self.passWordTextField.passwordRegularExpression = @"[a-zA-Z0-9!@#$%^&*_]*";
+    self.passWordTextField.delegate = self;
+    self.passWordTextField.sipdelegate = self;
+}
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+- (IBAction)forgetPasswordButtonAction:(UIButton *)sender
+{
+    
+}
+#pragma mark - 获取短信验证码
+- (IBAction)getSmsCode:(UIButton *)sender
+{
+    [self.passWordTextField resignFirstResponder];
+    __time = 59;
+    [sender setTitle:[NSString stringWithFormat:@"重新获取(%d)",__time] forState:UIControlStateNormal];
+    [sender setUserInteractionEnabled:NO];
+
+    counter = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(changeTime) userInfo:nil repeats:YES];
+    phoneNo = [UserInfoSample shareInstance].custItems[@"mobileno"];
+    NSLog(@"phoneNo .. __ %@",phoneNo);
+
+    if (phoneNo) {
+        NSDictionary *CustomerInfoDTO = @{@"relMobile":phoneNo};
+        NSDictionary *SmsTempleteDataDTO = @{@"smsTempType":@"01",
+                                            @"SmsTransType":@"011",
+                                            @"Varilble1":self.money,
+                                            @"Varilble2":@"ezdb"};
+        
+        NSDictionary *params = @{@"customerInfoDTO":CustomerInfoDTO,
+                                 @"smsTemplateDataDTO":SmsTempleteDataDTO,};
+        
+        BOCOPPayAuthorizeInfo *authorizeInfo = [BOCOPLogin sharedInstance].authInfo;
+        BindGetCodeRequest *request = [BindGetCodeRequest requestWithHeaders:nil];
+        
+        NSMutableDictionary *headParameters = [NSMutableDictionary dictionaryWithDictionary:[request getBusinessRequestHeaderDictionary:authorizeInfo]];
+        
+        request.headers = headParameters;
+        request.postJSON = [params JSONString];
+        
+        [request onRequestDidFinishLoadingWithResult:^(NSDictionary *result) {
+            if ([result[@"serviceResponse"][@"responseCode"] isEqualToString:_responseCode_Msg_Done]) {
+                NSLog(@"&& ^^ ** 获取短信验证码成功");
+                
+            }else if ([result[@"msgcde"]isEqualToString:@"ASR-000003"]||
+                      [result[@"msgcde"]isEqualToString:@"ASR-000005"]||
+                      [result[@"msgcde"]isEqualToString:@"invalid_token"]) {
+                [BOCOPLogin sharedInstance].isLogin = NO;
+                NSMutableArray *arr = [NSMutableArray arrayWithObjects:@"确定", nil];
+                [self showNBAlertWithAletTag:16 Title:@"温馨提示" content:result[@"rtnmsg"] btnArray:arr];
+            }else{
+                NSMutableArray *arr = [NSMutableArray arrayWithObjects:@"确定", nil];
+                [self showNBAlertWithAletTag:19 Title:@"温馨提示" content:result[@"serviceResponse"][@"responseMsg"] btnArray:arr];
+            }
+        }];
+        
+        [request onRequestFailWithError:^(NSError *error) {
+            __Login_Invailid_;
+        }];
+        [request connect];
+    }
+}
+#pragma mark - 定时器changeTime
+- (void)changeTime
+{
+    __time --;
+    [self.getSMSCodeButton setTitle:[NSString stringWithFormat:@"重新获取(%d)",__time] forState:UIControlStateNormal];
+    if (__time==-1) {
+        [counter invalidate];
+        [self.getSMSCodeButton setTitle:@"重新获取" forState:UIControlStateNormal];
+        [self.getSMSCodeButton setUserInteractionEnabled:YES];
+        __time = 59;
+    }
+}
+#pragma  mark - 点击确定
+- (IBAction)submitButtonAction:(UIButton *)sender
+{
+    [self.passWordTextField resignFirstResponder];
+    if (self.passWordTextField.text.length==0) {
+        [MSUtil showHudMessage:@"支付密码不能为空" hideAfterDelay:1.5 uiview:self.view];
+    }else if(self.passWordTextField.text.length<6||self.passWordTextField.text.length>20){
+        [MSUtil showHudMessage:@"支付密码长度不符" hideAfterDelay:1.5 uiview:self.view];
+    }else if(self.SMSCodeTextField.text.length<6||self.SMSCodeTextField.text.length>6){
+        [MSUtil showHudMessage:@"验证码长度不符" hideAfterDelay:1.5 uiview:self.view];
+    }else{
+        [self getServerRandom];
+    }
+}
+#pragma mark - 基金申购请求
+- (void)subscribeFund
+{
+//    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    NSLog(@"relMobile %@",[UserInfoSample shareInstance].custItems[@"mobileno"]);
+    if ([UserInfoSample shareInstance].custItems[@"mobileno"]) {
+        NSDictionary *customerInfoDTO = @{@"relMobile":[UserInfoSample shareInstance].custItems[@"mobileno"],
+                                          @"validCode":self.SMSCodeTextField.text,};
+        NSDictionary *params = @{@"customerInfoDTO":customerInfoDTO};
+        //验证码校验
+        BOCOPPayAuthorizeInfo *authorizeInfo = [BOCOPLogin sharedInstance].authInfo;
+        VerifyMsgCodeRequest *request = [VerifyMsgCodeRequest requestWithHeaders:nil];
+        
+        NSMutableDictionary *headParameters = [NSMutableDictionary dictionaryWithDictionary:[request getBusinessRequestHeaderDictionary:authorizeInfo]];
+        request.headers = headParameters;
+        request.postJSON = [params JSONString];
+        
+        [request onRequestDidFinishLoadingWithResult:^(NSDictionary *result) {
+            if ([result[@"serviceResponse"][@"responseCode"] isEqualToString:_responseCode_Msg_Done]) {
+                [self getServerRandom];
+            }else {
+//                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                NSMutableArray *arr = [NSMutableArray arrayWithObjects:@"确定", nil];
+                [self showNBAlertWithAletTag:19 Title:@"温馨提示" content:result[@"serviceResponse"][@"responseMsg"] btnArray:arr];
+            }
+        }];
+        [request onRequestFailWithError:^(NSError *error) {
+//            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            __Login_Invailid_;
+        }];
+    }
+
+}
+#pragma mark - 获取服务端随机数
+- (void)getServerRandom
+{
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    BOCOPPayAuthorizeInfo *authorizeInfo = [BOCOPLogin sharedInstance].authInfo;
+    GetServerRandomRequest *request = [GetServerRandomRequest requestWithHeaders:nil];
+    NSMutableDictionary *headers = [NSMutableDictionary dictionaryWithDictionary:[request getBusinessRequestHeaderDictionary:authorizeInfo]];
+    NSDictionary *params =@{@"AppName":@"ezdb"};
+    request.headers = headers;
+    request.postJSON = [params JSONString];
+    [request onRequestDidFinishLoadingWithResult:^(NSDictionary *result) {
+        self.serverRandNum = result[@"serverRandom"];
+        NSLog(@"__serverRandNum %@",self.serverRandNum);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSString *base64RandomCode = [self getBase64RandomCode:self.serverRandNum];
+            self.passWordTextField.sipdelegate = self;
+            self.passWordTextField.randomeKey_S = base64RandomCode;
+            [self.passWordTextField getValue];
+            
+        });
+    }];
+    [request onRequestFailWithError:^(NSError *error) {
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        NSLog(@"error %@",error);
+        __Login_Invailid_;
+    }];
+    
+    [request connect];
+    
+}
+- (NSString *)getBase64RandomCode:(NSString*)randomCode
+{
+    int length = [randomCode lengthOfBytesUsingEncoding:NSUTF8StringEncoding];
+    char inputData[length];
+    
+    [[randomCode dataUsingEncoding:NSUTF8StringEncoding] getBytes:inputData length:length];
+    size_t inputDataSize = (size_t)[randomCode length];
+    size_t outputDataSize = EstimateBas64EncodedDataSize(inputDataSize);//calculate the decoded data size
+    char outputData[outputDataSize];//prepare a Byte[] for the decoded data
+    Base64EncodeData(inputData, inputDataSize, outputData, &outputDataSize);//decode the data
+    NSData *theData = [[NSData alloc] initWithBytes:outputData length:outputDataSize];//create a NSData object from the decoded data
+    NSString *base64EncodedResult = [[NSString alloc] initWithData:theData encoding:NSUTF8StringEncoding];
+    
+	return base64EncodedResult;
+}//
+#define FORPRODUCT 1
+#pragma mark - delegate method
+#ifdef FORPRODUCT
+
+#else
+- (void)actionAfterSip:(int)resultType
+        passwordResult:(NSString *)passwordResult
+         randomCResult:(NSString *)randomCResult
+             errorCode:(NSString *)errorCode
+          errorMessage:(NSString *)errorMessage
+{
+    if (resultType==0) {
+        if (errorCode) {
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            NSDictionary *errorInfo = @{@"error_code":errorMessage,@"error_description":errorMessage};
+            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"温馨提示"  message:errorInfo[@"error_description"] delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+            [alert show];
+            
+        }else{
+            self.pdResult = passwordResult;
+            self.randomResult = randomCResult;
+            //基金申购请求
+            NSDictionary *data = @{@"OldPass":self.pdResult,
+                                   @"OldPass_RC":self.randomResult,
+                                   @"rs":self.serverRandNum};
+            
+            NSDictionary *passwordDTO = @{@"data":data};
+            
+            NSDictionary *params = @{@"userId":[BOCOPLogin sharedInstance].userName,
+                                     @"fundCode":self.fundCode,
+                                     @"cardSeq":self.cardSeq,
+                                     @"subscribeAmount":self.money,
+                                     @"validCode":self.SMSCodeTextField.text,
+                                     @"PasswordDTO":passwordDTO};
+            
+            BOCOPPayAuthorizeInfo *authorizeInfo = [BOCOPLogin sharedInstance].authInfo;
+            SubscribeDataRequest *request = [SubscribeDataRequest requestWithHeaders:nil];
+            
+            NSMutableDictionary *headParameters = [NSMutableDictionary dictionaryWithDictionary:[request getBusinessRequestHeaderDictionary:authorizeInfo]];
+            
+            request.headers = headParameters;
+            request.postJSON = [params JSONString];
+            [request onRequestDidFinishLoadingWithResult:^(NSDictionary *result) {
+                NSLog(@"serviceResponse %@",result);
+                if ([result[@"responseCode"]isEqualToString:_responseCode_PayPwd_Done]) {
+                    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                    //支付密码验证成功 跳转下个界面
+                }else if ([result[@"msgcde"]isEqualToString:@"ASR-000003"]||
+                          [result[@"msgcde"]isEqualToString:@"ASR-000005"]||
+                          [result[@"msgcde"]isEqualToString:@"invalid_token"]) {
+                    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                    [BOCOPLogin sharedInstance].isLogin = NO;
+                    NSMutableArray *arr = [NSMutableArray arrayWithObjects:@"确定", nil];
+                    [self showNBAlertWithAletTag:111 Title:@"温馨提醒" content:result[@"rtnmsg"] btnArray:arr];
+                if (result[@"orderNo"]) {
+                    //申购结果请求
+                    odrNo = result[@"orderNo"];
+                    double delayInSeconds = 7.0;
+                    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+                    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                        NSLog(@"... second");
+                        [self querySubscribeResult];
+                    });
+                    
+                }else{
+                    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                    NSMutableArray *arr = [NSMutableArray arrayWithObjects:@"确定", nil];
+                    [self showNBAlertWithAletTag:110 Title:@"温馨提醒" content:result[@"rtnmsg"] btnArray:arr];
+                }
+           
+            
+            }
+                 }];
+            
+            [request onRequestFailWithError:^(NSError *error) {
+                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                NSLog(@".. ** error %@",error);
+                __Login_Invailid_;
+            }];
+            [request connect];
+
+    }
+}
+#endif
+
+#pragma mark - 申购结果查询
+- (void)querySubscribeResult
+{
+    BOCOPPayAuthorizeInfo *authorizeInfo = [BOCOPLogin sharedInstance].authInfo;
+    SubscribeResultRequest *request = [SubscribeResultRequest requestWithHeaders:nil];
+    NSMutableDictionary *headParameters = [NSMutableDictionary dictionaryWithDictionary:[request getBusinessRequestHeaderDictionary:authorizeInfo]];
+    NSDictionary *params = @{@"orderNo":odrNo};
+    
+    request.headers = headParameters;
+    request.postJSON = [params JSONString];
+    
+    [request onRequestDidFinishLoadingWithResult:^(NSDictionary *result) {
+        
+        NSLog(@"申购结果 * %@",result);
+        SubscribModel *model = [[SubscribModel alloc]init];
+        
+        model.orderNo = result[@"orderNo"];
+        model.orderStatus = result[@"orderStatus"];
+        model.transactionDate = result[@"transactionDate"];
+        model.incomeStartDate = result[@"incomeStartDate"];
+        model.statusDescription = result[@"statusDescription"];
+        model.errReason = result[@"errReason"];
+
+    }];
+    
+    [request onRequestFailWithError:^(NSError *error) {
+        __Login_Invailid_;
+    }];
+    [request connect];
+
+}
+
+#pragma mark - UITextFieldDelegate
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    if (textField==self.passWordTextField) {
+        if (range.location>=20) {
+            return NO;
+        }else
+            return YES;
+    }else if(textField==self.SMSCodeTextField){
+        if (range.location>=6) {
+            return NO;
+        }else
+            return YES;
+    }
+    return YES;
+}
+#pragma mark - 其他
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    [self.view endEditing:YES];
+}
+
+#pragma mark - NBAlertViewDelegate
+- (void)NBAlertViewDialogButtonTouchUpInside:(id)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    [alertView close];
+    if ([alertView tag]==19) {
+    }else if([alertView tag]==16||
+             [alertView tag]==111){
+        GOTO_NEXTVIEWCONTROLLER(LoginViewController,
+                                @"LoginViewController",
+                                @"LoginViewController4");
+    }
+}
+@end

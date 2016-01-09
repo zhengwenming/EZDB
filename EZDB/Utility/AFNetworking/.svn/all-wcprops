@@ -1,0 +1,131 @@
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/AFNetworking
+END
+AFHTTPSessionManager.m
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/AFNetworking/AFHTTPSessionManager.m
+END
+AFURLResponseSerialization.m
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/AFNetworking/AFURLResponseSerialization.m
+END
+AFNetworking.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/AFNetworking/AFNetworking.h
+END
+AFSecurityPolicy.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/AFNetworking/AFSecurityPolicy.h
+END
+AFSecurityPolicy.m
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/AFNetworking/AFSecurityPolicy.m
+END
+AFNetworkActivityIndicatorManager.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/AFNetworking/AFNetworkActivityIndicatorManager.h
+END
+AFURLSessionManager.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/AFNetworking/AFURLSessionManager.h
+END
+AFNetworkActivityIndicatorManager.m
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/AFNetworking/AFNetworkActivityIndicatorManager.m
+END
+AFURLConnectionOperation.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/AFNetworking/AFURLConnectionOperation.h
+END
+AFHTTPRequestOperationManager.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/AFNetworking/AFHTTPRequestOperationManager.h
+END
+AFNetworkReachabilityManager.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/AFNetworking/AFNetworkReachabilityManager.h
+END
+AFURLSessionManager.m
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/AFNetworking/AFURLSessionManager.m
+END
+AFURLConnectionOperation.m
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/AFNetworking/AFURLConnectionOperation.m
+END
+AFURLRequestSerialization.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/AFNetworking/AFURLRequestSerialization.h
+END
+AFHTTPRequestOperationManager.m
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/AFNetworking/AFHTTPRequestOperationManager.m
+END
+AFHTTPRequestOperation.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/AFNetworking/AFHTTPRequestOperation.h
+END
+AFNetworkReachabilityManager.m
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/AFNetworking/AFNetworkReachabilityManager.m
+END
+AFHTTPSessionManager.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/AFNetworking/AFHTTPSessionManager.h
+END
+AFHTTPRequestOperation.m
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/AFNetworking/AFHTTPRequestOperation.m
+END
+AFURLRequestSerialization.m
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/AFNetworking/AFURLRequestSerialization.m
+END
+AFURLResponseSerialization.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Utility/AFNetworking/AFURLResponseSerialization.h
+END

@@ -1,0 +1,115 @@
+//
+//  TransactionDetailController.m
+//  EZDB
+//
+//  Created by wenming.zheng on 14-11-12.
+//  Copyright (c) 2014年 Pactera. All rights reserved.
+//
+
+#import "TransactionDetailController.h"
+#import "QureyHistoryDetailRequest.h"
+
+@interface TransactionDetailController ()
+
+@end
+
+@implementation TransactionDetailController
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Custom initialization
+    }
+    return self;
+}
+- (void)popViewContrl:(NSInteger )index{
+    if (index==1) {
+        
+        [self.navigationController popViewControllerAnimated:YES];
+        
+    }else if (index==2){
+        
+    }
+}
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.navigationController setNavigationBarHidden:YES];
+    [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleLightContent];
+    [[EZDBAppDelegate appDelegate].tabBarCtl hideMyTabBar];
+}
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    [[EZDBAppDelegate appDelegate].tabBarCtl showMyTabBar];
+    
+}
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    [self initUI];
+    [self loadHistoryDetail];
+}
+
+#pragma mark
+#pragma mark 加载交易明细
+-(void)loadHistoryDetail{
+    BOCOPPayAuthorizeInfo *authorizeInfo = [BOCOPLogin sharedInstance].authInfo;
+     QureyHistoryDetailRequest *request = [QureyHistoryDetailRequest requestWithHeaders:nil];
+    NSMutableDictionary *headers = [NSMutableDictionary dictionaryWithDictionary:[request getBusinessRequestHeaderDictionary:authorizeInfo]];
+    //报文头
+    request.headers = headers;
+    //参数
+    NSLog(@"%@",self.orderNo);
+    NSDictionary *bodyParameters = @{@"orderNo":self.orderNo};
+    MBProgressHUD *hub = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hub.labelText = @"数据加载中...";
+    request.postJSON = [bodyParameters JSONString];
+    
+    [request onRequestDidFinishLoadingWithResult:^(NSDictionary *result) {
+        NSLog(@"%@",result);
+        hub.hidden = YES;
+        dispatch_async(dispatch_get_main_queue(), ^{
+
+            self.orderNoLabel.text = self.orderNo;
+            self.fundNameLabel.text = self.fundName;
+            self.orderTimeLabel.text = self.orderTime;
+            self.orderStateLabel.text =self.orderState;
+            NSLog(@"%@",result[@"transactionType"]);
+            if ([result[@"transactionType"] isEqualToString:@"1"]) {
+                self.tradeTypeLabel.text = @"申购";
+            }else if ([result[@"transactionType"] isEqualToString:@"2"]){
+                
+                self.tradeTypeLabel.text = @"快速赎回";
+
+            }else if ([result[@"transactionType"] isEqualToString:@"3"]){
+                
+                self.tradeTypeLabel.text = @"普通赎回";
+                
+            }
+
+            
+        });
+    }];
+    [request onRequestFailWithError:^(NSError *error) {
+        hub.hidden = YES;
+
+        NSLog(@"notice _detail _error:%@",error);
+        
+    }];
+    [request connect];
+
+}
+
+- (void)initUI
+{
+    [self setNavBarWithtitle:@"交易明细" superView:self.view backImg:kNavBackImgName homeImg:nil];
+    self.navigationController.navigationBarHidden = YES;
+}
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+@end

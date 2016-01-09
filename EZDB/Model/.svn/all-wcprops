@@ -1,0 +1,209 @@
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/DBS/!svn/ver/1389/ios/new_ezdb/EZDB/Model
+END
+ProfitModel.m
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/DBS/!svn/ver/1371/ios/new_ezdb/EZDB/Model/ProfitModel.m
+END
+DataModel.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/DBS/!svn/ver/1012/ios/new_ezdb/EZDB/Model/DataModel.h
+END
+ChartData.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/DBS/!svn/ver/1353/ios/new_ezdb/EZDB/Model/ChartData.h
+END
+BindCardModel.m
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Model/BindCardModel.m
+END
+SubscribModel.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/DBS/!svn/ver/1318/ios/new_ezdb/EZDB/Model/SubscribModel.h
+END
+DataModel.m
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Model/DataModel.m
+END
+ChartData.m
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/DBS/!svn/ver/1353/ios/new_ezdb/EZDB/Model/ChartData.m
+END
+FundDetailModel.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/DBS/!svn/ver/1318/ios/new_ezdb/EZDB/Model/FundDetailModel.h
+END
+SubscribModel.m
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/DBS/!svn/ver/1318/ios/new_ezdb/EZDB/Model/SubscribModel.m
+END
+TaldividendInfo.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/DBS/!svn/ver/1012/ios/new_ezdb/EZDB/Model/TaldividendInfo.h
+END
+QueryGainsInfo.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/DBS/!svn/ver/1012/ios/new_ezdb/EZDB/Model/QueryGainsInfo.h
+END
+FundDetailModel.m
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Model/FundDetailModel.m
+END
+TransactionModel.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/DBS/!svn/ver/1371/ios/new_ezdb/EZDB/Model/TransactionModel.h
+END
+TaldividendInfo.m
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/DBS/!svn/ver/1012/ios/new_ezdb/EZDB/Model/TaldividendInfo.m
+END
+QueryGainsInfo.m
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/DBS/!svn/ver/1353/ios/new_ezdb/EZDB/Model/QueryGainsInfo.m
+END
+TransactionModel.m
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/DBS/!svn/ver/1371/ios/new_ezdb/EZDB/Model/TransactionModel.m
+END
+RedeemDailureModel.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/DBS/!svn/ver/1389/ios/new_ezdb/EZDB/Model/RedeemDailureModel.h
+END
+CardModel.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/DBS/!svn/ver/1318/ios/new_ezdb/EZDB/Model/CardModel.h
+END
+RedeemDailureModel.m
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/DBS/!svn/ver/1389/ios/new_ezdb/EZDB/Model/RedeemDailureModel.m
+END
+CardModel.m
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Model/CardModel.m
+END
+FunListModel.h
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/DBS/!svn/ver/1318/ios/new_ezdb/EZDB/Model/FunListModel.h
+END
+HistoryDetailModel.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/DBS/!svn/ver/1371/ios/new_ezdb/EZDB/Model/HistoryDetailModel.h
+END
+HistoryDetailModel.m
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/DBS/!svn/ver/1371/ios/new_ezdb/EZDB/Model/HistoryDetailModel.m
+END
+FunListModel.m
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Model/FunListModel.m
+END
+CustInfoModel.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/DBS/!svn/ver/1318/ios/new_ezdb/EZDB/Model/CustInfoModel.h
+END
+CustInfoModel.m
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/DBS/!svn/ver/997/ios/new_ezdb/EZDB/Model/CustInfoModel.m
+END
+RedeemResultModel.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/DBS/!svn/ver/1347/ios/new_ezdb/EZDB/Model/RedeemResultModel.h
+END
+ChartModel.h
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/DBS/!svn/ver/1012/ios/new_ezdb/EZDB/Model/ChartModel.h
+END
+FundPropertyModel.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/DBS/!svn/ver/1371/ios/new_ezdb/EZDB/Model/FundPropertyModel.h
+END
+ProfitModel.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/DBS/!svn/ver/1371/ios/new_ezdb/EZDB/Model/ProfitModel.h
+END
+RedeemResultModel.m
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/DBS/!svn/ver/1347/ios/new_ezdb/EZDB/Model/RedeemResultModel.m
+END
+BindCardModel.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/DBS/!svn/ver/1318/ios/new_ezdb/EZDB/Model/BindCardModel.h
+END
+FundPropertyModel.m
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/DBS/!svn/ver/1371/ios/new_ezdb/EZDB/Model/FundPropertyModel.m
+END
+ChartModel.m
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/DBS/!svn/ver/1012/ios/new_ezdb/EZDB/Model/ChartModel.m
+END

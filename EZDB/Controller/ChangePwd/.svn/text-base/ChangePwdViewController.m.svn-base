@@ -1,0 +1,438 @@
+//
+//  ChangePwdViewController.m
+//  EZDB
+//
+//  Created by wenming.zheng on 14-10-19.
+//  Copyright (c) 2014年 Pactera. All rights reserved.
+//
+
+#import "ChangePwdViewController.h"
+#import "ChangSuccessViewController.h"
+#import "LoginViewController.h"
+#import "BOCOLogoutRequest.h"
+#include "Base64Transcoder.h"
+#import "BorderSetBtn.h"
+#import "ReviseLogPwdRequest.h"
+#import "QueryTwoPwdsRequest.h"
+
+#define kLogOut  1
+typedef enum : NSUInteger {
+    kCheckPwdRequest = 11,
+    kChangePwdRequest,
+} kRequestTpye;
+
+@interface ChangePwdViewController ()
+
+@end
+
+extern int __counter;
+
+@implementation ChangePwdViewController
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Custom initialization
+    }
+    return self;
+}
+
+#pragma mark -
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    NSLog(@"__counter %d",__counter);
+
+    [self initUI];
+    [self setPwdTf];
+}
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+//    [[EZDBAppDelegate appDelegate].tabBarCtl hideMyTabBar];
+}
+#pragma mark - PopViewContrlDelegate
+- (void)popViewContrl:(NSInteger )index
+{
+    if (index==1) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }else if (index==2){
+       
+    }
+}
+-(void)initUI
+{
+    if (kDeviceVersion>=7.0) {
+        self.navView = [[NavView alloc]initWithFrame:CGRectMake(0, 0, kScreenWidth, 64) navTitle:@"修改登录密码" lBtnImg:kNavBackImgName rBtnImg:nil];
+    }else {
+        self.navView = [[NavView alloc]initWithFrame:CGRectMake(0, 0, kScreenWidth, 44) navTitle:@"修改登录密码" lBtnImg:kNavBackImgName rBtnImg:nil];
+        for (UIView *v in self.view.subviews) {
+            CGRect rect = v.frame;
+            rect.origin.y -= 20;
+            v.frame = rect;
+        }
+    }
+    self.navView.delegate = (id<PopViewContrlDelegate>)self;
+    [self.view addSubview:self.navView];
+    
+    [self.acceptButton addTarget:self action:@selector(changePwdClick:) forControlEvents:UIControlEventTouchUpInside];
+
+}
+#pragma mark - 忘记密码
+- (IBAction)forgetPwd:(UIButton *)sender
+{
+    [self.view endEditing:YES];
+    NSMutableArray *arr = [NSMutableArray arrayWithObjects:@"立即重置",@"取消", nil];
+    [self showNBAlertWithAletTag:1 Title:@"忘记密码" content:@"如果您忘记了登录密码，请前往一下地址重置您的登录密码：\nhttp://open.boc.cn" btnArray:arr];
+
+}
+
+#pragma mark - 密码键盘设置
+- (void)setPwdTf
+{
+    self.oldPwdTextField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+    self.oldPwdTextField.secureTextEntry = YES;
+    self.oldPwdTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    self.oldPwdTextField.returnKeyType = UIReturnKeyDone;
+    self.oldPwdTextField.backgroundColor = [UIColor clearColor];
+    self.oldPwdTextField.clearsOnBeginEditing = YES;
+    self.oldPwdTextField.font = [UIFont systemFontOfSize:14];
+    self.oldPwdTextField.borderStyle = UITextBorderStyleNone;
+    self.oldPwdTextField.randomeKey_S = @"MDAwMDAwMDAwMDAwMDk4Nw==";
+    self.oldPwdTextField.passwordMaxLength=15;
+    self.oldPwdTextField.passwordMinLength=6;
+    self.oldPwdTextField.outputValueType=2;
+    self.oldPwdTextField.passwordRegularExpression = @"[a-zA-Z0-9]*";
+    self.oldPwdTextField.sipdelegate = self;
+    
+    self.pwdTextField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+    self.pwdTextField.secureTextEntry = YES;
+    self.pwdTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    self.pwdTextField.returnKeyType = UIReturnKeyDone;
+    self.pwdTextField.backgroundColor = [UIColor clearColor];
+    self.pwdTextField.clearsOnBeginEditing = YES;
+    self.pwdTextField.font = [UIFont systemFontOfSize:14];
+    self.pwdTextField.borderStyle = UITextBorderStyleNone;
+    self.pwdTextField.randomeKey_S = @"MDAwMDAwMDAwMDAwMDk4Nw==";
+    self.pwdTextField.passwordMaxLength=15;
+    self.pwdTextField.passwordMinLength=6;
+    self.pwdTextField.outputValueType=2;
+    self.pwdTextField.passwordRegularExpression = @"[a-zA-Z0-9]*";
+    self.pwdTextField.sipdelegate = self;
+    
+    self.pwdAgainTextField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+    self.pwdAgainTextField.secureTextEntry = YES;
+    self.pwdAgainTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    self.pwdAgainTextField.returnKeyType = UIReturnKeyDone;
+    self.pwdAgainTextField.backgroundColor = [UIColor clearColor];
+    self.pwdAgainTextField.clearsOnBeginEditing = YES;
+    self.pwdAgainTextField.font = [UIFont systemFontOfSize:14];
+    self.pwdAgainTextField.borderStyle = UITextBorderStyleNone;
+    self.pwdAgainTextField.randomeKey_S = @"MDAwMDAwMDAwMDAwMDk4Nw==";
+    self.pwdAgainTextField.passwordMaxLength=15;
+    self.pwdAgainTextField.passwordMinLength=6;
+    self.pwdAgainTextField.outputValueType=2;
+    self.pwdAgainTextField.passwordRegularExpression = @"[a-zA-Z0-9]*";
+    self.pwdAgainTextField.sipdelegate = self;
+
+}
+//键盘收起
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    [self.view endEditing:YES];
+}
+
+#pragma mark - change password
+- (void)changePwdClick:(UIButton *)sender
+{
+//
+    [self.view endEditing:YES];
+
+    if ([self.oldPwdTextField.text isEqualToString:@""]) {
+        [MSUtil showHudMessage:@"原密码不能为空" hideAfterDelay:1.5 uiview:self.view];
+        
+    }else if ([self.pwdTextField.text isEqualToString:@""]) {
+        [MSUtil showHudMessage:@"新密码不能为空" hideAfterDelay:1.5 uiview:self.view];
+
+    }else if ([self.pwdAgainTextField.text isEqualToString:@""]) {
+        [MSUtil showHudMessage:@"确认密码不能为空" hideAfterDelay:1.5 uiview:self.view];
+
+    }else if(self.oldPwdTextField.text.length<6||self.oldPwdTextField.text.length>15){
+        [MSUtil showHudMessage:@"原密码长度不符合" hideAfterDelay:1.5 uiview:self.view];
+        
+    }else if(self.pwdTextField.text.length<6||self.pwdTextField.text.length>15){
+        [MSUtil showHudMessage:@"新密码长度不符合" hideAfterDelay:1.5 uiview:self.view];
+        
+    }else if(self.pwdAgainTextField.text.length<6||self.pwdAgainTextField.text.length>15){
+        [MSUtil showHudMessage:@"确认密码长度不符合" hideAfterDelay:1.5 uiview:self.view];
+
+    }else if(self.pwdTextField.text.length!=self.pwdAgainTextField.text.length){
+        [MSUtil showHudMessage:@"两次输入的新密码长度不匹配" hideAfterDelay:1.5 uiview:self.view];
+        
+    }else{
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        
+        BOCOPPayAuthorizeInfo *authorizeInfo = [BOCOPLogin sharedInstance].authInfo;
+        BOCOLogoutRequest *request = [BOCOLogoutRequest requestWithHeaders:nil];
+        
+        NSMutableDictionary *headParameters = [NSMutableDictionary dictionaryWithDictionary:[request getBusinessRequestHeaderDictionary:authorizeInfo]];
+    
+        request.headers = headParameters;
+        [request onRequestDidFinishLoadingWithResult:^(NSDictionary *result) {
+            NSLog(@"log out seccuced");
+            if ([result[@"msgcde"] isEqualToString:@"ASR-000003"]||
+                [result[@"msgcde"] isEqualToString:@"ASR-000005"]||
+                [result[@"msgcde"] isEqualToString:@"invalid_token"]){
+                NSMutableArray *arr = [NSMutableArray arrayWithObjects:@"确定", nil];
+                [self showNBAlertWithAletTag:111 Title:@"温馨提醒" content:result[@"rtnmsg"] btnArray:arr];
+            }
+        }];
+        [request onRequestFailWithError:^(NSError *error) {
+            NSLog(@"log out  fail %@",error);
+            if ([[error userInfo][@"error_code"]isEqualToString:@"ASR-000003"]||
+                [[error userInfo][@"error_code"] isEqualToString:@"ASR-000005"]||
+                [[error userInfo][@"error_code"] isEqualToString:@"invalid_token"]) {
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
+                [BOCOPLogin sharedInstance].isLogin = NO;
+                NSMutableArray *arr = [NSMutableArray arrayWithObjects:@"确定", nil];
+                [self showNBAlertWithAletTag:111 Title:@"温馨提示" content:[error userInfo][@"error_description"] btnArray:arr];
+                
+            }else if([[error userInfo][@"error_code"] isEqualToString:@"ASR-000000"]){
+                NSLog(@"log out  ASR-000000");
+                self.nameTf = [[UITextField alloc]init];
+                self.nameTf.text = [BOCOPLogin sharedInstance].userName;
+                [[BOCOPLogin sharedInstance] setUserNameField:self.nameTf];
+                [[BOCOPLogin sharedInstance] setEncryCtrl:self.oldPwdTextField];
+                [[BOCOPLogin sharedInstance] logIn];
+                [[BOCOPLogin sharedInstance] onLoginSuccess:^(BOCOPPayAuthorizeInfo *authorizeInfo) {
+                    if([[BOCOPLogin sharedInstance] calledType]==CalledFromHome)
+                    {
+                        NSLog(@"TTTTTTT  _____%@",  authorizeInfo.Cookie);
+                        self.cookie = authorizeInfo.Cookie;
+                        if([authorizeInfo.msgcde isEqualToString:@"ASR-000000"]){
+                            NSLog(@"___________________logout successed");
+                            [self getRandom];
+                        }
+                        NSLog(@"___________________login successed");
+                        
+                    }else{
+                        if([[BOCOPLogin sharedInstance] delegate] && [[[BOCOPLogin sharedInstance] delegate] respondsToSelector:@selector(loginCallBack)])
+                        {
+                            [[[BOCOPLogin sharedInstance] delegate] loginCallBack];
+                            [MBProgressHUD hideHUDForView:self.view animated:YES];
+                            NSLog(@"loginCallBack");
+                        }
+                    }
+                }];
+                
+                [[BOCOPLogin sharedInstance]  onLoginFail:^(NSError *error) {
+                    [MBProgressHUD hideHUDForView:self.view animated:YES];
+                    NSMutableArray *arr = [NSMutableArray arrayWithObjects:@"确定", nil];
+                    [self showNBAlertWithAletTag:112 Title:@"温馨提示" content:[error userInfo][@"error_description"] btnArray:arr];
+                }];
+            }
+        }];
+        [request connect];
+    }
+}
+
+// 获取随机数
+- (void)getRandom
+{
+    NSLog(@"OOOOOO  _____%@",self.cookie);
+    NSDictionary *headers = @{@"clentid":kAppBopKey,
+                              @"userid":[BOCOPLogin sharedInstance].userName,
+                              @"chnflg":@"1",
+                              @"trandt":[MSUtil getyyyymmdd],
+                              @"trantm":[MSUtil gethhmmss],
+                              @"cookie":self.cookie};
+
+    [self.oldPwdTextField resignFirstResponder];
+    [self.pwdTextField resignFirstResponder];
+    [self.pwdAgainTextField resignFirstResponder];
+
+    BOCOPPayAuthorizeGetRandomNumDataRequest *request = [BOCOPPayAuthorizeGetRandomNumDataRequest requestWithHeaders:headers];
+    [request onRequestDidFinishLoadingWithResult:^(NSDictionary *result) {
+
+        if (__counter==1) {
+            self.serverRandId = result[@"randomid"];
+            self.serverRandNum = result[@"random"];
+        }else if(__counter==2){
+            NSLog(@"counter_ %d",__counter);
+            self.serverRandId2 = result[@"randomid"];
+            self.serverRandNum2 = result[@"random"];
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (__counter==1) {
+                NSString *base64RandomCode = [self getBase64RandomCode:self.serverRandNum];
+                self.pwdTextField.sipdelegate = self;
+                self.pwdTextField.randomeKey_S = base64RandomCode;
+                [self.pwdTextField getValue];
+            }else if(__counter==2){
+                NSString *base64RandomCode = [self getBase64RandomCode:self.serverRandNum2];
+                self.pwdAgainTextField.sipdelegate = self;
+                self.pwdAgainTextField.randomeKey_S = base64RandomCode;
+                [self.pwdAgainTextField getValue];
+            }
+        });
+    }];
+    [request onRequestFailWithError:^(NSError *error) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:[error userInfo][@"error_code"] delegate:self cancelButtonTitle:@"确认" otherButtonTitles:nil, nil];
+        [alert show];
+    }];
+    [request connect];//1
+}
+
+#pragma mark - AfterSipDelegator
+- (void)actionAfterSip:(int)resultType
+        passwordResult:(NSString *)passwordResult
+         randomCResult:(NSString *)randomCResult
+             errorCode:(NSString *)errorCode
+          errorMessage:(NSString *)errorMessage;//3
+{
+    if (resultType == 0) {
+        if (errorCode) {
+            NSLog(@"____error code is %@",errorCode);
+            NSMutableArray *arr = [NSMutableArray arrayWithObjects:@"确定", nil];
+            [self showNBAlertWithAletTag:112 Title:@"温馨提示" content:errorMessage btnArray:arr];
+        }else{
+            if(__counter==1) {
+                self.pdResult = passwordResult;
+                self.randomResult = randomCResult;
+                NSLog(@"*******   first is %@",self.pdResult);
+                __counter++;
+                NSLog(@"--------%d",__counter);
+                [self getRandom];
+            }else if (__counter==2){
+                self.pdResult2 = passwordResult;
+                self.randomResult2 = randomCResult;
+                NSLog(@"*******   second is %@",self.pdResult2);
+                [self queryTwoPwdsRequest];
+            }
+        }
+    }
+}
+#pragma mark-  两次密码一致验证
+- (void)queryTwoPwdsRequest
+{
+    NSDictionary *params = @{@"pwd_old":self.pdResult,
+                             @"pwd_new":self.pdResult2,
+                             @"cyp_old":self.randomResult,
+                             @"cyp_new":self.randomResult2,
+                             @"randomid":self.serverRandId,
+                             @"randomid2":self.serverRandId2,
+                             @"enctyp":@"0"};
+    
+    BOCOPPayAuthorizeInfo *authorizeInfo = [BOCOPLogin sharedInstance].authInfo;
+    QueryTwoPwdsRequest *request = [QueryTwoPwdsRequest requestWithHeaders:nil];
+    NSMutableDictionary *headParameters = [NSMutableDictionary dictionaryWithDictionary:[request getBusinessRequestHeaderDictionary:authorizeInfo]];
+    request.headers = headParameters;
+    request.postJSON = [params JSONString];
+    
+    [request onRequestDidFinishLoadingWithResult:^(NSDictionary *result) {
+        NSLog(@"验证两次密码result is %@",result);
+        if ([result[@"result"] isEqualToString:@"0"]) {
+            __counter = 1;
+            NSLog(@"JJJJJJJJJ   ____两次密码一致");
+            NSLog(@"_____%@",self.pdResult);
+            NSLog(@"_____%@",self.pdResult2);
+            NSLog(@"_____%@",self.serverRandNum);
+            NSLog(@"_____%@",self.serverRandNum2);
+            NSLog(@"_____%@",self.serverRandId);
+            NSLog(@"_____%@",self.serverRandId2);
+            [self revisePwd];
+        }
+    }];
+    [request onRequestFailWithError:^(NSError *error) {
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        NSLog(@"验证两次密码 error is %@ ",error);
+        NSMutableArray *arr = [NSMutableArray arrayWithObjects:@"确定", nil];
+        [self showNBAlertWithAletTag:112 Title:@"温馨提示" content:[error userInfo][@"error_description"] btnArray:arr];
+    }];
+    [request connect];
+}
+- (void)revisePwd
+{
+    NSDictionary *params =@{@"userid":[BOCOPLogin sharedInstance].userName,
+                            @"pwd_new":self.pdResult,
+                            @"cyp_new":self.randomResult,
+                            @"randomid":self.serverRandId,
+                            @"enctyp":@"0"};
+    BOCOPPayAuthorizeInfo *authorizeInfo = [BOCOPLogin sharedInstance].authInfo;
+    ReviseLogPwdRequest *request = [ReviseLogPwdRequest requestWithHeaders:nil];
+    
+    NSMutableDictionary *headParameters = [NSMutableDictionary dictionaryWithDictionary:[request getBusinessRequestHeaderDictionary:authorizeInfo]];
+    
+    
+    request.headers = headParameters;
+    request.postJSON = [params JSONString];
+    
+    [request onRequestDidFinishLoadingWithResult:^(NSDictionary *result) {
+        NSString *name = [BOCOPLogin sharedInstance].userName;
+        if ([result[@"rtnmsg"] isEqualToString:name]) {
+            [BOCOPLogin sharedInstance].isLogin = NO;
+            NSMutableArray *arr = [NSMutableArray arrayWithObjects:@"确定", nil];
+            [self showNBAlertWithAletTag:111 Title:@"温馨提示" content:@"修改成功,请重新登录" btnArray:arr];
+        }
+
+    }];
+    [request onRequestFailWithError:^(NSError *error) {
+        NSLog(@"修改密码 error is %@ ",error);
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        __Login_Invailid_ ;
+        }];
+    [request connect];
+
+}
+- (NSString *)getBase64RandomCode:(NSString*)randomCode
+{
+    int length = [randomCode lengthOfBytesUsingEncoding:NSUTF8StringEncoding];
+    char inputData[length];
+    
+    [[randomCode dataUsingEncoding:NSUTF8StringEncoding] getBytes:inputData length:length];
+    size_t inputDataSize = (size_t)[randomCode length];
+    size_t outputDataSize = EstimateBas64EncodedDataSize(inputDataSize);//calculate the decoded data size
+    char outputData[outputDataSize];//prepare a Byte[] for the decoded data
+    Base64EncodeData(inputData, inputDataSize, outputData, &outputDataSize);//decode the data
+    NSData *theData = [[NSData alloc] initWithBytes:outputData length:outputDataSize];//create a NSData object from the decoded data
+    
+    NSString *base64EncodedResult = [[NSString alloc] initWithData:theData encoding:NSUTF8StringEncoding];
+    
+	return base64EncodedResult;
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - NBAlertViewDelegate
+- (void)NBAlertViewDialogButtonTouchUpInside:(id)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    NSLog(@"d __ %d",buttonIndex );
+    if ([alertView tag]==1) {         //忘记密码
+        [alertView close];
+        if (buttonIndex==0) {
+            [[UIApplication sharedApplication]openURL:[NSURL URLWithString:@"http://open.boc.cn"]];
+            [alertView close];
+        }else if (buttonIndex==1) {
+        }
+    }else if ([alertView tag]==111) {
+        [alertView close];
+        GOTO_NEXTVIEWCONTROLLER(LoginViewController,
+                                @"LoginViewController",
+                                @"LoginViewController4");
+    }else if([alertView tag]==112){
+        [alertView close];
+    }
+}
+
+
+- (void)dealloc
+{
+    __counter = 1;
+}
+
+@end

@@ -1,0 +1,102 @@
+//
+//  NoticeViewController.m
+//  EZDB
+//
+//  Created by wenming.zheng on 14-11-1.
+//  Copyright (c) 2014年 Pactera. All rights reserved.
+//
+
+#import "NoticeViewController.h"
+#import "DbNoticeListRequest.h"
+#import "DbNoticeDetailRequest.h"
+
+@interface NoticeViewController ()
+
+@end
+
+@implementation NoticeViewController
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Custom initialization
+    }
+    return self;
+}
+
+#pragma mark - PopViewContrlDelegate
+- (void)popViewContrl:(NSInteger )index{
+    if (index==1) {
+        if ([BOCOPLogin sharedInstance].isLogin) {
+            [self.navigationController popViewControllerAnimated:YES];
+        }else
+            [self.navigationController popToRootViewControllerAnimated:YES];
+    }else if(index==2){
+
+
+    }
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    [self initNav];
+    [self loadNoticeDetail];
+}
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.tabBarController.tabBar setHidden:YES];
+    [[EZDBAppDelegate appDelegate].tabBarCtl hideMyTabBar];
+}
+- (void)initNav
+{
+    [self setNavBarWithtitle:@"消息公告" superView:self.view backImg:kNavBackImgName homeImg:nil];
+}
+- (void)loadNoticeDetail
+{
+    BOCOPPayAuthorizeInfo *authorizeInfo = [BOCOPLogin sharedInstance].authInfo;
+    DbNoticeDetailRequest *request = [DbNoticeDetailRequest requestWithHeaders:nil];
+    NSMutableDictionary *headers = [NSMutableDictionary dictionaryWithDictionary:[request getBusinessRequestHeaderDictionary:authorizeInfo]];
+    //报文头
+    request.headers = headers;
+    //参数
+    NSLog(@"self.noticeId is _ %@",self.noticeId);
+    NSDictionary *bodyParameters;
+    if (self.noticeId) {
+        bodyParameters = @{@"id":self.noticeId};
+
+    }
+    request.postJSON = [bodyParameters JSONString];
+    
+    [request onRequestDidFinishLoadingWithResult:^(NSDictionary *result) {
+        NSLog(@"notice_Detail is %@",result[@"info"][@"content"]);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.noticeTitle setText:result[@"info"][@"name"]];
+        });
+    }];
+    [request onRequestFailWithError:^(NSError *error) {
+        NSLog(@"notice _detail _error:%@",error);
+        
+    }];
+    [request connect];
+
+}
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

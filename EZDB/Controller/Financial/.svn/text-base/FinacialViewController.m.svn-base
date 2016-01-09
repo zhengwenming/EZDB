@@ -1,0 +1,241 @@
+//
+//  FinacialViewController.m
+//  EZDB
+//
+//  Created by Haitao.Li on 14-10-16.
+//  Copyright (c) 2014年 Pactera. All rights reserved.
+//
+
+#import "FinacialViewController.h"
+#import "DetailViewController.h"
+#import "FundListDataRequest.h"
+#import "FunListModel.h"
+#import "BorderSetBtn.h"
+#import "FundCell.h"
+#import "PurchaseViewController.h"
+
+@interface FinacialViewController ()<UITableViewDataSource,UITableViewDelegate>
+{
+    NSMutableArray *dataArr;
+    NSMutableArray *imgArr;
+    MBProgressHUD  *_hub;
+}
+@end
+
+@implementation FinacialViewController
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Custom initialization
+        dataArr = [NSMutableArray array];
+        [self.navigationController.navigationBar setTranslucent:NO];
+    }
+    return self;
+}
+
+#pragma mark -
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    [self setNavBar];
+    [self setSubViews];
+    [self sendRequest];
+    //基金列表
+    
+    // Do any additional setup after loading the view.
+}
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [[EZDBAppDelegate appDelegate].tabBarCtl showMyTabBar];
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - setTableView
+- (void)setSubViews
+{
+    _hub = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    _hub.labelText = @"数据加载中...";
+    _tableView.delegate = self;
+    _tableView.dataSource = self;
+    _tableView.showsVerticalScrollIndicator = NO;
+    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    _tableView.frame = CGRectMake(0, 44, kScreenWidth, kScreenHeight-44);
+    [_tableView registerNib:[UINib nibWithNibName:@"FundCell" bundle:nil] forCellReuseIdentifier:@"Cell"];
+
+}
+
+
+#pragma mark - 立即购买
+- (void)buyBtnAction:(UIButton *)button
+{
+    FunListModel *model = dataArr[button.tag-2];
+    if ([BOCOPLogin sharedInstance].isLogin) {
+        PurchaseViewController *purVC = [[PurchaseViewController alloc]initWithNibName:@"PurchaseViewController" bundle:nil];//
+        purVC.fundCode = model.fundCode;
+        [self.navigationController pushViewController:purVC animated:YES];
+    }else {
+        [EZDBAppDelegate appDelegate].tabBarCtl.selectedIndex = 3;
+        CATransition *transition = [CATransition animation];
+        [transition setDuration:0.4];
+        [transition setType:@"moveIn"];
+        [self.tabBarVc.view.layer addAnimation:transition forKey:nil];
+    }
+    
+    
+}
+#pragma mark - 了解更多
+- (void)checkDetail:(UIButton *)sender
+{
+    DetailViewController *dtvc = [[DetailViewController alloc]init];
+    if (dataArr.count>0) {
+        FunListModel *model = dataArr[sender.tag-1];
+        dtvc.fundCode = model.fundCode;
+        dtvc.fundName = model.fnLNam;
+    }
+    NSLog( @"dtvc is %@",dtvc);
+    [self.navigationController pushViewController:dtvc animated:YES];
+    
+}
+#pragma mark - UITableViewDataSource
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return dataArr.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSMutableString *zero = [NSMutableString string];
+    FundCell *cell = [tableView dequeueReusableCellWithIdentifier: @"Cell"];
+    FunListModel *model = dataArr[indexPath.row];
+
+    if (model.yield.length>6) {
+        model.yield = [model.yield substringWithRange:NSMakeRange(0, 6)];
+    }else if(model.yield.length<6){
+        for (int i=0; i<6-model.yield.length; i++) {
+            zero = (NSMutableString *)[zero stringByAppendingString:@"0"];
+            model.yield = [model.yield stringByAppendingString:zero];
+        }
+        NSLog(@"model.yield__ %@",model.yield);
+    }
+    if (model.fundIncome.length>6) {
+        model.fundIncome = [model.fundIncome substringWithRange:NSMakeRange(0, 6)];
+    }else if(model.fundIncome.length<6){
+        for (int i=0; i<6-model.fundIncome.length; i++) {
+            zero = (NSMutableString *)[zero stringByAppendingString:@"0"];
+            model.fundIncome = [model.fundIncome stringByAppendingString:zero];
+        }
+        NSLog(@"model.fundIncome__ %@",model.fundIncome);
+    }
+    [cell.proRate setText:model.yield];
+    [cell.nameLabel setText:model.fnLNam];
+    [cell.profit setText:model.fundIncome];
+    [cell.fundCode setText:model.fundCode];
+    [cell.saleMoney setText:model.buyLowLim];
+    [cell.buyBtn setBackgroundColor:kBtnBackGroudColor];
+    [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+
+    [cell.buyBtn addTarget:self action:@selector(buyBtnAction:) forControlEvents:UIControlEventTouchUpInside];
+    [cell.buyBtn setTag:indexPath.row+2];
+
+    [cell.moreBtn addTarget:self action:@selector(checkDetail:) forControlEvents:UIControlEventTouchUpInside];
+    [cell.moreBtn setTag:indexPath.row+1];
+    
+    return cell;
+}
+
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return kCloseZero;
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return kCloseZero;
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 229;
+}
+#pragma mark -  基金列表
+- (void)sendRequest
+{
+    NSDictionary *params = @{@"signType":@"0",
+                             @"signChannel":@"0",
+                             @"businessCode":@"001",
+                             @"uuid":@""};
+
+    BOCOPPayAuthorizeInfo *authorizeInfo = [BOCOPLogin sharedInstance].authInfo;
+    FundListDataRequest *request = [FundListDataRequest requestWithHeaders:nil];
+
+    NSMutableDictionary *headParameters = [NSMutableDictionary dictionaryWithDictionary:[request getBusinessRequestHeaderDictionary:authorizeInfo]];
+    
+    request.headers = headParameters;
+    request.postJSON = [params JSONString];
+
+    [request onRequestDidFinishLoadingWithResult:^(NSDictionary *result) {
+//        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        [_hub hide:YES];
+        if (result) {
+            NSLog(@"success______fundlist id %@",result);
+            FunListModel *model = [[FunListModel alloc]init];
+            model.fundCount = [result[@"fundInfoCnt"] integerValue];
+            
+            for (int i=0; i<model.fundCount; i++) {
+                FunListModel *model = [[FunListModel alloc]init];
+                model.fundCode  = result[@"fundInfoList"][i][@"fundCode"];
+                model.fnSNam    = result[@"fundInfoList"][i][@"fnsNam"];
+                model.fnLNam    = result[@"fundInfoList"][i][@"fnLNam"];
+                model.buyLowLim = result[@"fundInfoList"][i][@"buyLowLim"];
+                model.buyUplim  = result[@"fundInfoList"][i][@"buyUplim"];
+                model.yield     = result[@"fundInfoList"][i][@"yield"];
+                model.fundIncome= result[@"fundInfoList"][i][@"fundIncome"];
+                [dataArr addObject:model];
+            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [_tableView reloadData];
+            });
+
+        }
+    }];
+    
+    [request onRequestFailWithError:^(NSError *error) {
+        [_hub hide:YES];
+//        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        NSLog(@"fail______fundlist id %@",error);
+        NSMutableArray *arr = [NSMutableArray arrayWithObjects:@"确定", nil];
+        [self showNBAlertWithAletTag:110 Title:@"温馨提示" content:[error userInfo][@"error_description"] btnArray:arr];
+    }];
+    [request connect];
+}
+#pragma mark - NBAlertViewDelegate
+- (void)NBAlertViewDialogButtonTouchUpInside:(id)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    [alertView close];
+    if ([alertView tag]==110) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
+
+#pragma mark - NavBar
+- (void)setNavBar
+{
+    [self setNavBarWithtitle:@"我要理财" superView:self.view backImg:nil homeImg:nil];
+}
+- (void)dealloc
+{
+    _tableView.delegate = nil;
+    _tableView.dataSource = nil;
+    
+}
+
+
+@end
