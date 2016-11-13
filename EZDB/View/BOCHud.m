@@ -28,8 +28,10 @@
 }
 -(void)startAnimating{
     [self show:YES];
-    CABasicAnimation *rotateAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.y"]; rotateAnimation.fromValue = [NSNumber numberWithFloat:0.0];
+    CABasicAnimation *rotateAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.y"];
+    rotateAnimation.fromValue = [NSNumber numberWithFloat:0.0];
     rotateAnimation.duration = 4;
+    rotateAnimation.removedOnCompletion = NO;
     rotateAnimation.repeatDuration = INT_MAX;
     rotateAnimation.toValue = [NSNumber numberWithFloat:6.0 * M_PI];
     [self.rotationIV.layer addAnimation:rotateAnimation forKey:@"key"];
@@ -40,6 +42,7 @@
     CABasicAnimation *rotateAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.y"]; rotateAnimation.fromValue = [NSNumber numberWithFloat:0.0];
     rotateAnimation.duration = 4;
     rotateAnimation.repeatDuration = INT_MAX;
+    rotateAnimation.removedOnCompletion = NO;
     rotateAnimation.toValue = [NSNumber numberWithFloat:6.0 * M_PI];
     [self.rotationIV.layer addAnimation:rotateAnimation forKey:@"key"];
 }

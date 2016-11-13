@@ -12,6 +12,8 @@
 #import "LoginViewController.h"
 #import "PerCenterVController.h"
 #import "AssetViewController.h"
+#import "STNavigationController.h"
+
 //#import "NoCardPurVController.h"
 //#import "UpdPwdViewController.h"
 //#import "ChangePwdViewController.h"
@@ -123,7 +125,7 @@
                         }else if(IS_IPHONE4){
                             pVC = [[PerCenterVController alloc]initWithNibName:@"PerCenterVController35" bundle:nil];
                         }
-                        UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:pVC];
+                        STNavigationController *nav = [[STNavigationController alloc]initWithRootViewController:pVC];
                         [newViewControllers addObject:nav];
                     }else{
                         [newViewControllers addObject:vc];
@@ -143,7 +145,7 @@
                         }else if(IS_IPHONE4){
                             pVC = [[PerCenterVController alloc]initWithNibName:@"PerCenterVController" bundle:nil];
                         }
-                        UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:pVC];
+                        STNavigationController *nav = [[STNavigationController alloc]initWithRootViewController:pVC];
                         NSLog(@"unlogin unlogin__ **");
 
                         [newViewControllers addObject:nav];
@@ -167,7 +169,7 @@
                         UIViewController *vc = [tbar.viewControllers objectAtIndex:i];
                         if (i==2) {
                             BlankViewController *blankVC= [[BlankViewController alloc]init];
-                            UINavigationController *blakNav = [[UINavigationController alloc]initWithRootViewController:blankVC];
+                            STNavigationController *blakNav = [[STNavigationController alloc]initWithRootViewController:blankVC];
                             [newViewControllers addObject:blakNav];
                         }else{
                             [newViewControllers addObject:vc];
@@ -187,7 +189,7 @@
                     UIViewController *vc = [tbar.viewControllers objectAtIndex:i];
                     if (i==1) {
                         FinacialViewController *pVC = [[FinacialViewController alloc]initWithNibName:@"FinacialViewController" bundle:nil];
-                        UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:pVC];
+                        STNavigationController *nav = [[STNavigationController alloc]initWithRootViewController:pVC];
                         [newViewControllers addObject:nav];
                     }else{
                         [newViewControllers addObject:vc];
@@ -211,13 +213,13 @@
     DEFINE_CONTROLLERS(RootViewController, nav1);
     DEFINE_CONTROLLERS(FinacialViewController, nav2);
     
-    UINavigationController *nav3;
+    STNavigationController *nav3;
     if ([BOCOPLogin sharedInstance].isLogin) {
         BlankViewController *blankVC = [[BlankViewController alloc]init];
-        nav3 =[[UINavigationController alloc]initWithRootViewController:blankVC];
+        nav3 =[[STNavigationController alloc]initWithRootViewController:blankVC];
     }else{
         FinacialViewController *login = [[FinacialViewController alloc]init];
-        nav3 =[[UINavigationController alloc]initWithRootViewController:login];
+        nav3 =[[STNavigationController alloc]initWithRootViewController:login];
     }
     
     FinacialViewController *loginVC;
@@ -227,7 +229,7 @@
         }else if(IS_IPHONE4){
             loginVC = [[FinacialViewController alloc]initWithNibName:@"FinacialViewController" bundle:nil];
         }
-        nav4 = [[UINavigationController alloc]initWithRootViewController:loginVC];
+        nav4 = [[STNavigationController alloc]initWithRootViewController:loginVC];
     tabBarItems = @[nav1,nav2,nav3,nav4];
     return tabBarItems;
 }
@@ -235,9 +237,11 @@
 - (void)hideMyTabBar
 {
     
-    [UIView animateWithDuration:0.5 animations:^{
-        _customTabbarView.frame = CGRectMake(0, kScreenHeight, kScreenWidth, kTabBarHeight);
-    }];
+//    [UIView animateWithDuration:0.5 animations:^{
+//        _customTabbarView.frame = CGRectMake(0, kScreenHeight, kScreenWidth, kTabBarHeight);
+//    }];
+    _customTabbarView.frame = CGRectMake(0, kScreenHeight, kScreenWidth, kTabBarHeight);
+
 }
 
 - (void)showMyTabBar
@@ -245,6 +249,9 @@
     [UIView animateWithDuration:0.5 animations:^{
         _customTabbarView.frame = CGRectMake(0, orginHeight, kScreenWidth, kTabBarHeight);
     }];
+//    _customTabbarView.frame = CGRectMake(0, orginHeight, kScreenWidth, kTabBarHeight);
+
+
 }
 
 - (void)didReceiveMemoryWarning

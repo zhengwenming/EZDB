@@ -56,6 +56,8 @@
 		5280D2191A1B672B006A10A3 /* RedemptionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5280D2171A1B672B006A10A3 /* RedemptionCell.m */; };
 		5280D21A1A1B672B006A10A3 /* RedemptionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5280D2181A1B672B006A10A3 /* RedemptionCell.xib */; };
 		52F5E4E41A235215006CC5F7 /* WarnCardReplaceRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 52F5E4E31A235215006CC5F7 /* WarnCardReplaceRequest.m */; };
+		701705311DD8681A007158D0 /* STNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 701705301DD8681A007158D0 /* STNavigationController.m */; };
+		701705341DD86EEA007158D0 /* STAnimatedTransitioning.m in Sources */ = {isa = PBXBuildFile; fileRef = 701705331DD86EEA007158D0 /* STAnimatedTransitioning.m */; };
 		703236531C40FE1100204432 /* WMBannerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 703236521C40FE1100204432 /* WMBannerView.m */; };
 		A933B6781A1DD0920055296C /* ChangeCardRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = A933B6771A1DD0920055296C /* ChangeCardRequest.m */; };
 		A93BE6C71A1E03500074C45F /* RedeemRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = A93BE6C61A1E03500074C45F /* RedeemRequest.m */; };
@@ -517,6 +519,10 @@
 		5280D2181A1B672B006A10A3 /* RedemptionCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RedemptionCell.xib; sourceTree = "<group>"; };
 		52F5E4E21A23520A006CC5F7 /* WarnCardReplaceRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WarnCardReplaceRequest.h; sourceTree = "<group>"; };
 		52F5E4E31A235215006CC5F7 /* WarnCardReplaceRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WarnCardReplaceRequest.m; sourceTree = "<group>"; };
+		7017052F1DD8681A007158D0 /* STNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STNavigationController.h; sourceTree = "<group>"; };
+		701705301DD8681A007158D0 /* STNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STNavigationController.m; sourceTree = "<group>"; };
+		701705321DD86EEA007158D0 /* STAnimatedTransitioning.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STAnimatedTransitioning.h; sourceTree = "<group>"; };
+		701705331DD86EEA007158D0 /* STAnimatedTransitioning.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STAnimatedTransitioning.m; sourceTree = "<group>"; };
 		703236511C40FE1100204432 /* WMBannerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMBannerView.h; sourceTree = "<group>"; };
 		703236521C40FE1100204432 /* WMBannerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMBannerView.m; sourceTree = "<group>"; };
 		A933B6761A1DD0920055296C /* ChangeCardRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangeCardRequest.h; sourceTree = "<group>"; };
@@ -1682,6 +1688,10 @@
 			children = (
 				BD9ED9AB1A14636F00D813B0 /* TabBarViewController.h */,
 				BD1641D01A11BE4E00261A73 /* TabBarViewController.m */,
+				701705321DD86EEA007158D0 /* STAnimatedTransitioning.h */,
+				701705331DD86EEA007158D0 /* STAnimatedTransitioning.m */,
+				7017052F1DD8681A007158D0 /* STNavigationController.h */,
+				701705301DD8681A007158D0 /* STNavigationController.m */,
 				18AD998219FE2D230058292B /* STViewController.h */,
 				18AD998019FE2C460058292B /* STViewController.m */,
 				5280D2031A1B65FA006A10A3 /* Redemption */,
@@ -3019,6 +3029,7 @@
 				BDADE48D1A04ABB000234EAA /* DbAdListRequest.m in Sources */,
 				BDA89A631A00C02C00E2D13E /* BorderSetView.m in Sources */,
 				1816465A1A1C673100C99BE2 /* FileManager.m in Sources */,
+				701705341DD86EEA007158D0 /* STAnimatedTransitioning.m in Sources */,
 				BDF2A42519F0C71900571DAE /* BOCOPPayUtils.m in Sources */,
 				BDF2A44719F0C71900571DAE /* CJSONSerializer.m in Sources */,
 				BDCDEF841A1DD5E6004C6FAC /* ViewFrameAccessor.m in Sources */,
@@ -3105,6 +3116,7 @@
 				18FFCE991A246F1000A267C3 /* HistoryDetailModel.m in Sources */,
 				BD9ED9EB1A148EDF00D813B0 /* PurchaseViewController.m in Sources */,
 				BD183A541A12037800E712A5 /* SystemViewController.m in Sources */,
+				701705311DD8681A007158D0 /* STNavigationController.m in Sources */,
 				BD01BABC1A076B6D004D2853 /* BindCardModel.m in Sources */,
 				A93BE6C71A1E03500074C45F /* RedeemRequest.m in Sources */,
 				BD66D24F19EE205900F78170 /* ASIDataDecompressor.m in Sources */,
